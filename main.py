@@ -21,3 +21,4 @@ if __name__ == "__main__":
     GU = graph_generator.forceatlas_graph(GCC)
 
 
+    wordclouds.wordclouds(Data)
