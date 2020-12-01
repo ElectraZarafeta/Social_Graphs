@@ -115,9 +115,13 @@ def distribution_graph(GCC, mode):
     ax2.set_ylim(0.5, 10 ** 3)
     ax2.set_xlabel('log(node degree)')
     ax2.set_ylabel('log(count)')
+    if mode.lower() == 'in':
+        plt.savefig("./images/In_Degree_Distribution.png", format="PNG")
+    else:
+        plt.savefig("./images/Out_Degree_Distribution.png", format="PNG")
     plt.show()
 
-    plt.savefig("./images/Degree_Distribution.png", format="PNG")
+
 
 
 def forceatlas_graph(GCC):
@@ -187,9 +191,8 @@ def forceatlas_graph(GCC):
     ax.collections[0].set_linewidth(0.1)
     ax.set_title('US House Representatives of 2020 network', fontsize=16);
     plt.axis('off')
-    plt.show()
-
     plt.savefig("./images/ForceAtlas_Graph.png", format="PNG")
+    plt.show()
 
     return GU
 
