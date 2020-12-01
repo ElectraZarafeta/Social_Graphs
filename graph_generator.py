@@ -1,5 +1,4 @@
 import networkx as nx
-import pandas as pd
 import regex as re
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,6 +8,9 @@ from fa2 import ForceAtlas2
 
 # Create Directed Graph and save to image
 def directed_graph(Data):
+    # regex for mentions/ retweets
+    regex_mentions_retweets = "\s([@][\w_-]+)"
+
     G = nx.DiGraph()
 
     for i in range(len(Data)):
@@ -198,25 +200,7 @@ def forceatlas_graph(GCC):
 
 
 
-if __name__ == "__main__":
-    # regex for mentions/ retweets
-    regex_mentions_retweets = "\s([@][\w_-]+)"
 
-    #load data from csv
-    Data = pd.read_csv('./data/Data.csv')
-
-    G = directed_graph(Data)
-
-    GCC = giant_connected_component(G)
-
-    #in and out degree
-    in_deg, out_deg = in_out_deg(G)
-
-    #in and out degree distribution
-    distribution_graph(GCC, 'In')
-    distribution_graph(GCC, 'Out')
-
-    GU = forceatlas_graph(GCC)
 
 
 
