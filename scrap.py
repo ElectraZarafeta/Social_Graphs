@@ -109,4 +109,4 @@ if __name__ == "__main__":
 
     #print(Data.head(10))
 
-    Data.to_csv(r'./data/Data.csv')
+    Data.to_csv(r'./data/Data.csv', index=False)
