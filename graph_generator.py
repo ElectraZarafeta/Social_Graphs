@@ -21,14 +21,13 @@ def directed_graph(Data):
         for username in usernames_before:
             username = username.strip().split('@')[1]
 
-            if username in Data["TwitterUsernames"].values:  # usernames / candidates
+            if (username in Data["TwitterUsernames"].values) and (username != name):  # usernames / candidates
                 G.add_edge(name, username)
 
     nx.draw(G, node_size=10)
-    plt.savefig("./images/Undirected_Graph.png", format="PNG")
+    plt.savefig("./images/Directed_Graph.png", format="PNG")
 
     return G
-
 
 
 # Create Giant Connected Component - GCC
@@ -46,10 +45,10 @@ def giant_connected_component(G):
             between_representatives += 1
 
     print(f'Number of links between the representatives (from GCC): {between_representatives}')
-    print(f'Percentage of links between the representatives (from GCC): {round(between_representatives / GCC.number_of_edges() * 100, 1)} %')
+    print(
+        f'Percentage of links between the representatives (from GCC): {round(between_representatives / GCC.number_of_edges() * 100, 1)} %')
 
     return GCC
-
 
 
 def in_out_deg(G):
@@ -88,8 +87,7 @@ def in_out_deg(G):
     return in_deg, out_deg
 
 
-
-def distribution_graph(GCC, mode):
+def distribution_graph(G, mode):
     # find in or out degrees of network
     if mode.lower() == 'in':
         degree_sequence = [d for n, d in G.in_degree()]
@@ -121,15 +119,10 @@ def distribution_graph(GCC, mode):
         plt.savefig("./images/In_Degree_Distribution.png", format="PNG")
     else:
         plt.savefig("./images/Out_Degree_Distribution.png", format="PNG")
-    plt.show()
+    # plt.show()
 
 
-
-
-def forceatlas_graph(GCC):
-    # Convert to undirected graph
-    GU = GCC.to_undirected()
-
+def forceatlas_graph(GU):
     # Color nodes according to party
     colors = []
     for n in list(GU.nodes(data="Party")):
@@ -194,22 +187,6 @@ def forceatlas_graph(GCC):
     ax.set_title('US House Representatives of 2020 network', fontsize=16);
     plt.axis('off')
     plt.savefig("./images/ForceAtlas_Graph.png", format="PNG")
-    plt.show()
+    # plt.show()
 
     return GU
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
