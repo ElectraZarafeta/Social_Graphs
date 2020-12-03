@@ -4,7 +4,7 @@ from fa2 import ForceAtlas2
 import seaborn as sns
 
 
-def core_decomposition_republican(GU):
+def decomposition_republican(GU, core=False, truss=False):
     # Republican Graph
     nodes = (
         node
@@ -13,11 +13,15 @@ def core_decomposition_republican(GU):
     )
 
     GU_Republican = nx.Graph(GU.subgraph(nodes))
-    core_nodes = nx.k_core(GU_Republican, k=9).nodes()
+
+    if core:
+        nodes = nx.k_core(GU_Republican, k=9).nodes()
+    elif truss:
+        nodes = nx.k_truss(GU_Republican, k=5).nodes()
 
     node_color = []
     for node in GU_Republican.nodes():
-        if node in core_nodes:
+        if node in nodes:
             node_color.append("yellow")
         else:
             node_color.append("red")
@@ -49,14 +53,13 @@ def core_decomposition_republican(GU):
 
     positions = forceatlas2.forceatlas2_networkx_layout(GU, pos=None, iterations=2000)
 
-    plt.figure(num=None, figsize=(15, 9), dpi=500, facecolor='w', edgecolor='k')
+    plt.figure(num=None, figsize=(15, 9), dpi=80, facecolor='w', edgecolor='k')
 
     sns.set_style('whitegrid')
     sns.set_context('talk')
 
     # create legend
     plt.scatter([], [], c='yellow', alpha=0.7, s=100, label='Most Influential Republicans')
-    #plt.scatter([], [], c='blue', alpha=0.7, s=100, label='Democrat party')
     plt.legend(scatterpoints=1, frameon=False, labelspacing=1)
 
     nx.draw_networkx_nodes(GU_Republican, positions, node_size=sizes, node_color=node_color, alpha=0.7)
@@ -65,11 +68,15 @@ def core_decomposition_republican(GU):
     ax.collections[0].set_linewidth(0.1)
     ax.set_title('US House Republican Representatives of 2020 network', fontsize=16);
     plt.axis('off')
-    plt.savefig("./images/core_republican.png", format="PNG")
+
+    if core:
+        plt.savefig("./images/core_republican.png", format="PNG")
+    elif truss:
+        plt.savefig("./images/truss_republican.png", format="PNG")
 
 
 
-def core_decomposition_democrat(GU):
+def decomposition_democrat(GU, core=False, truss=False):
     # Democrat Graph
     nodes = (
         node
@@ -78,11 +85,15 @@ def core_decomposition_democrat(GU):
     )
 
     GU_Democrat = nx.Graph(GU.subgraph(nodes))
-    core_nodes = nx.k_core(GU_Democrat, k=12).nodes()
+
+    if core:
+        nodes = nx.k_core(GU_Democrat, k=12).nodes()
+    elif truss:
+        nodes = nx.k_truss(GU_Democrat, k=4).nodes()
 
     node_color = []
     for node in GU_Democrat.nodes():
-        if node in core_nodes:
+        if node in nodes:
             node_color.append("yellow")
         else:
             node_color.append("blue")
@@ -114,14 +125,13 @@ def core_decomposition_democrat(GU):
 
     positions = forceatlas2.forceatlas2_networkx_layout(GU, pos=None, iterations=2000)
 
-    plt.figure(num=None, figsize=(15, 9), dpi=500, facecolor='w', edgecolor='k')
+    plt.figure(num=None, figsize=(15, 9), dpi=80, facecolor='w', edgecolor='k')
 
     sns.set_style('whitegrid')
     sns.set_context('talk')
 
     # create legend
     plt.scatter([], [], c='yellow', alpha=0.7, s=100, label='Most Influential Democrats')
-    #plt.scatter([], [], c='blue', alpha=0.7, s=100, label='Democrat party')
     plt.legend(scatterpoints=1, frameon=False, labelspacing=1)
 
     nx.draw_networkx_nodes(GU_Democrat, positions, node_size=sizes, node_color=node_color, alpha=0.7)
@@ -130,7 +140,11 @@ def core_decomposition_democrat(GU):
     ax.collections[0].set_linewidth(0.1)
     ax.set_title('US House Democrat Representatives of 2020 network', fontsize=16);
     plt.axis('off')
-    plt.savefig("./images/core_democrat.png", format="PNG")
+
+    if core:
+        plt.savefig("./images/core_democrat.png", format="PNG")
+    elif truss:
+        plt.savefig("./images/truss_democrat.png", format="PNG")
 
 
 

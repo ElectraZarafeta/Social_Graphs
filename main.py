@@ -2,7 +2,7 @@ import pandas as pd
 
 from Social_Graphs import graph_generator
 from Social_Graphs import wordclouds
-from Social_Graphs import core_decomposition
+from Social_Graphs import decomposition
 
 if __name__ == "__main__":
     # load data from csv
@@ -26,8 +26,12 @@ if __name__ == "__main__":
     graph_generator.forceatlas_graph(GU)
 
     # core decomposition
-    core_decomposition.core_decomposition_republican(GU)
-    core_decomposition.core_decomposition_democrat(GU)
+    decomposition.decomposition_republican(GU, core=True)
+    decomposition.decomposition_democrat(GU, core=True)
+
+    # truss decomposition
+    decomposition.decomposition_republican(GU, truss=True)
+    decomposition.decomposition_democrat(GU, truss=True)
 
     # word cloud generator
     wordclouds.wordclouds(Data)
