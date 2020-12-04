@@ -1,8 +1,13 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import networkx as nx
+import seaborn as sns
 
 from Social_Graphs import graph_generator
 from Social_Graphs import wordclouds
 from Social_Graphs import decomposition
+from Social_Graphs import communities
+from Social_Graphs import hashtag_correlations
 
 if __name__ == "__main__":
     # load data from csv
@@ -16,8 +21,8 @@ if __name__ == "__main__":
     in_deg, out_deg = graph_generator.in_out_deg(G)
 
     # in and out degree distribution
-    graph_generator.distribution_graph(GCC, 'In')
-    graph_generator.distribution_graph(GCC, 'Out')
+    graph_generator.distribution(GCC, 'In')
+    graph_generator.distribution(GCC, 'Out')
 
     # Convert to undirected graph
     GU = GCC.to_undirected()
@@ -30,8 +35,18 @@ if __name__ == "__main__":
     decomposition.decomposition_democrat(GU, core=True)
 
     # truss decomposition
-    decomposition.decomposition_republican(GU, truss=True)
-    decomposition.decomposition_democrat(GU, truss=True)
+    truss_nodes_r, GU_Republican = decomposition.decomposition_republican(GU, truss=True)
+    truss_nodes_d, GU_Democrat = decomposition.decomposition_democrat(GU, truss=True)
 
     # word cloud generator
     wordclouds.wordclouds(Data)
+
+    # community generator
+    communities.communities(GU_Republican, Data, truss_nodes_r, p="r")
+    communities.communities(GU_Democrat, Data, truss_nodes_d, p="d")
+
+    # hashtag correlation
+    hashtag_correlations.hashtag_correlations(Data, republican=True)
+    hashtag_correlations.hashtag_correlations(Data, democrat=True)
+
+

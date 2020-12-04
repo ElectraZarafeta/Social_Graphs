@@ -3,21 +3,21 @@ import csv
 import pandas as pd
 
 if __name__ == "__main__":
-    #Secret keys to use the twitter API
+    # Secret keys to use the twitter API
 
-    consumer_key='JwBGzHlJImbq65zdSbD2t77SC'
-    consumer_secret='HSStuFy7OpXg35GW4N7iobVDkSvevVmMYkAeC9BJQ0Kl4SNVW2'
-    access_token_key='1326184476611842050-y74nowqvPo314THVipXtQ5A95DMcHY'
-    access_token_secret='L6vUq7co4Pstpfzc45wuCyxy4c34DKqQ3xxahH10lgWAl'
+    consumer_key = 'JwBGzHlJImbq65zdSbD2t77SC'
+    consumer_secret = 'HSStuFy7OpXg35GW4N7iobVDkSvevVmMYkAeC9BJQ0Kl4SNVW2'
+    access_token_key = '1326184476611842050-y74nowqvPo314THVipXtQ5A95DMcHY'
+    access_token_secret = 'L6vUq7co4Pstpfzc45wuCyxy4c34DKqQ3xxahH10lgWAl'
 
-    #First, let's use the twitter API in order to scrap data
+    # First, let's use the twitter API in order to scrap data
 
     api = twitter.Api(consumer_key=consumer_key,
                       consumer_secret=consumer_secret,
                       access_token_key=access_token_key,
                       access_token_secret=access_token_secret)
 
-    #From the list of US representatives for 2020 we obtain the `Party`, `TwitterUsernames`, `Name`, etc..
+    # From the list of US representatives for 2020 we obtain the `Party`, `TwitterUsernames`, `Name`, etc..
 
     with open('./data/2020 representatives list.csv', newline='', encoding="utf8") as f:
         reader = csv.reader(f)
@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
         for line in data:
             if line[4] != "":
-                TwitterUsernames.append(line[4].replace("@",""))
+                TwitterUsernames.append(line[4].replace("@", ""))
                 Names.append(line[2])
                 Chamber.append(line[1])
                 State.append(line[0])
@@ -42,19 +42,18 @@ if __name__ == "__main__":
                     Party.append("Democrat")
 
         # Print an example of a Twitter 0Username
-        #print(TwitterUsernames[17])
+        # print(TwitterUsernames[17])
 
     # checking the size of each our attributes
 
-    #print(len(TwitterUsernames))
-    #print(len(Party))
-    #print(len(Names))
-    #print(len(Chamber))
-    #print(len(State))
+    # print(len(TwitterUsernames))
+    # print(len(Party))
+    # print(len(Names))
+    # print(len(Chamber))
+    # print(len(State))
 
     # Let's create the DataFrame
     Data = pd.DataFrame()
-
 
     # the 1st row is the names of the list
     Party.pop(0), State.pop(0), Chamber.pop(0), Names.pop(0), TwitterUsernames.pop(0)  # drop the index
@@ -65,7 +64,7 @@ if __name__ == "__main__":
     Data['Chamber'] = Chamber
     Data['TwitterUsernames'] = TwitterUsernames
 
-    #print(Datahead())
+    # print(Datahead())
 
     Timelines1 = []
     for name in TwitterUsernames[0:100]:
@@ -107,6 +106,6 @@ if __name__ == "__main__":
 
     Data['Tweets'] = ListOftxt
 
-    #print(Data.head(10))
+    # print(Data.head(10))
 
     Data.to_csv(r'./data/Data.csv', index=False)

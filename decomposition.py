@@ -12,7 +12,8 @@ def decomposition_republican(GU, core=False, truss=False):
         if data.get("Party") == "Republican"
     )
 
-    GU_Republican = nx.Graph(GU.subgraph(nodes))
+    largest_cc = max(nx.connected_components(nx.Graph(GU.subgraph(nodes))), key=len)
+    GU_Republican = GU.subgraph(largest_cc)
 
     if core:
         nodes = nx.k_core(GU_Republican, k=9).nodes()
@@ -60,7 +61,7 @@ def decomposition_republican(GU, core=False, truss=False):
 
     # create legend
     plt.scatter([], [], c='yellow', alpha=0.7, s=100, label='Most Influential Republicans')
-    plt.legend(scatterpoints=1, frameon=False, labelspacing=1)
+    plt.legend(scatterpoints=1, frameon=True, labelspacing=1)
 
     nx.draw_networkx_nodes(GU_Republican, positions, node_size=sizes, node_color=node_color, alpha=0.7)
     nx.draw_networkx_edges(GU_Republican, positions, edge_color="grey", alpha=0.08)
@@ -73,6 +74,8 @@ def decomposition_republican(GU, core=False, truss=False):
         plt.savefig("./images/core_republican.png", format="PNG")
     elif truss:
         plt.savefig("./images/truss_republican.png", format="PNG")
+        return nodes, GU_Republican
+
 
 
 
@@ -84,7 +87,8 @@ def decomposition_democrat(GU, core=False, truss=False):
         if data.get("Party") == "Democrat"
     )
 
-    GU_Democrat = nx.Graph(GU.subgraph(nodes))
+    largest_cc = max(nx.connected_components(nx.Graph(GU.subgraph(nodes))), key=len)
+    GU_Democrat = GU.subgraph(largest_cc)
 
     if core:
         nodes = nx.k_core(GU_Democrat, k=12).nodes()
@@ -132,7 +136,7 @@ def decomposition_democrat(GU, core=False, truss=False):
 
     # create legend
     plt.scatter([], [], c='yellow', alpha=0.7, s=100, label='Most Influential Democrats')
-    plt.legend(scatterpoints=1, frameon=False, labelspacing=1)
+    plt.legend(scatterpoints=1, frameon=True, labelspacing=1)
 
     nx.draw_networkx_nodes(GU_Democrat, positions, node_size=sizes, node_color=node_color, alpha=0.7)
     nx.draw_networkx_edges(GU_Democrat, positions, edge_color="grey", alpha=0.08)
@@ -145,6 +149,8 @@ def decomposition_democrat(GU, core=False, truss=False):
         plt.savefig("./images/core_democrat.png", format="PNG")
     elif truss:
         plt.savefig("./images/truss_democrat.png", format="PNG")
+        return nodes, GU_Democrat
+
 
 
 

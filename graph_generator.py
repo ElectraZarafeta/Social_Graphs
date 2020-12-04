@@ -87,7 +87,7 @@ def in_out_deg(G):
     return in_deg, out_deg
 
 
-def distribution_graph(G, mode):
+def distribution(G, mode):
     # find in or out degrees of network
     if mode.lower() == 'in':
         degree_sequence = [d for n, d in G.in_degree()]

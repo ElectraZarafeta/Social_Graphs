@@ -5,6 +5,12 @@ import string
 import numpy as np
 from PIL import Image
 from wordcloud import WordCloud, ImageColorGenerator
+import operator
+
+lemmatizer = WordNetLemmatizer()  # assign the lemmatization function to a variable
+pun = string.punctuation  # assign to a string all sets of punctuation
+stops = nltk.corpus.stopwords.words('english')  # assign the list of english stop words (commonly used words)
+
 
 def wordclouds(Data):
     full_republican_text = ' '.join(Data[Data["Party"] == "Republican"]["Tweets"])
@@ -12,10 +18,6 @@ def wordclouds(Data):
 
     print(f'Length of full Republican text: {len(full_republican_text)}.')
     print(f'Length of full Democrats text: {len(full_democrat_text)}.')
-
-    lemmatizer = WordNetLemmatizer()  # assign the lemmatization function to a variable
-    pun = string.punctuation  # assign to a string all sets of punctuation
-    stops = nltk.corpus.stopwords.words('english')  # assign the list of english stop words (commonly used words)
 
     cleaned_republican_text = []
 
@@ -45,8 +47,6 @@ def wordclouds(Data):
         word = lemmatizer.lemmatize(word)  # return the lemma of each word
         cleaned_democrat_text.append(word)  # write each word to the cleaned democrat-file
 
-
-
     fdist_republican = nltk.FreqDist(cleaned_republican_text)
     fdist_democrat = nltk.FreqDist(cleaned_democrat_text)
 
@@ -56,14 +56,13 @@ def wordclouds(Data):
     print('\nThe 5 most common words in the Democrats text:')
     print(fdist_democrat.most_common(5))
 
-
     # TF-TR computation for Republican Party
 
     tftr_republican = []  # create a list which will contain the TF-TR results for the republican party
 
     for token in fdist_republican:  # loop through each token in term frequency
         tr = fdist_republican[token] / (
-                    fdist_democrat[token] + 1)  # compute the term ratios based on the above equation
+                fdist_democrat[token] + 1)  # compute the term ratios based on the above equation
         tftr = fdist_republican[token] * tr  # multiply TF and TR of each token to compute TR-TR
         tftr_republican.append([token, int(
             round(tftr))])  # assign the result of each token in the list (rounded up to the nearest integer value)
@@ -73,14 +72,13 @@ def wordclouds(Data):
 
     print(tftr_republican[:10])  # show the first 10 tokens in republican party with the highest TF-TR value
 
-
     # TF-TR computation for Democrat Party
 
     tftr_democrat = []  # create a list which will contain the TF-TR results for the democrat party
 
     for token in fdist_democrat:  # loop through each token in term frequency
         tr = fdist_democrat[token] / (
-                    fdist_republican[token] + 1)  # compute the term ratios based on the above equation
+                fdist_republican[token] + 1)  # compute the term ratios based on the above equation
         tftr = fdist_democrat[token] * tr  # multiply TF and TR of each token to compute TR-TR
         tftr_democrat.append([token, int(
             round(tftr))])  # assign the result of each token in the list (rounded up to the nearest integer value)
@@ -89,7 +87,6 @@ def wordclouds(Data):
                            reverse=True)  # descending sort the list based on the TF-TR value
 
     print(tftr_democrat[:10])  # show the first 10 tokens in democrat party with the highest TF-TR value
-
 
     # republican string
 
@@ -104,7 +101,6 @@ def wordclouds(Data):
 
     for tftr in tftr_democrat:  # loop through the democrat TF-TR list values
         all_democrat = all_democrat + ((tftr[0] + ' ') * tftr[1])  # add to the string the repeated tokens
-
 
     mask_republican = np.array(Image.open("./data/republican.png"))
     mask_democrat = np.array(Image.open("./data/democrat.png"))
