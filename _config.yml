@@ -3,4 +3,4 @@ email: e.zarafeta@hotmail.com
 baseurl: "Social_Graphs"
 url: ""
 github_username: ElectraZarafeta
-theme: minima
+theme: jekyll-theme-cayman
