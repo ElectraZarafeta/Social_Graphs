@@ -8,6 +8,7 @@ from Social_Graphs import wordclouds
 from Social_Graphs import decomposition
 from Social_Graphs import communities
 from Social_Graphs import hashtag_correlations
+from Social_Graphs import StateSentiment
 
 if __name__ == "__main__":
     # load data from csv
@@ -48,5 +49,7 @@ if __name__ == "__main__":
     # hashtag correlation
     hashtag_correlations.hashtag_correlations(Data, republican=True)
     hashtag_correlations.hashtag_correlations(Data, democrat=True)
-
+    
+    #Sentiment by State
+    StateSentiment.initialization(Data)
 
