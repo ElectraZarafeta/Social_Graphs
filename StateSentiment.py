@@ -21,7 +21,11 @@ nltk.download('punkt')
 nltk.download('wordnet')
 
 
-def TFPartisanDf(df):
+
+
+def Initialization(data):
+    df=data
+    def TFPartisanDf(df):
         tokens=[]
         for tweet in df.Tweets:
             words = word_tokenize(tweet) 
@@ -35,10 +39,6 @@ def TFPartisanDf(df):
                 tokens.append(word)
         return tokens
 
-
-def Initialization(data):
-    df=data
-  
 
     Repdf=df[df['Party']=='Republican']
     Demdf=df[df['Party']=='Democrat']
@@ -87,101 +87,99 @@ def Initialization(data):
             tftr_Rep[word]=tr
     
 
-def RepScoreToTwt(tweet):
-    score=0
-    i=0
-    Twt=''
-    words = word_tokenize(tweet) 
-    words = [w.lower() for w in words] 
-    words = [word for word in words if not word in pun] 
-    words = [word for word in words if word.isalpha()] 
-    words = [w for w in words if not w in stops] 
-    words = [w for w in words if not len(w) == 1]
-    for word in words: #loop through the list of words
-        word = lemmatizer.lemmatize(word) #return the lemma of each word
-        if word in tftr_Rep:
-            score+=tftr_Rep[word]
-            i+=1
-    return score/i
+    def RepScoreToTwt(tweet):
+        score=0
+        i=0
+        Twt=''
+        words = word_tokenize(tweet) 
+        words = [w.lower() for w in words] 
+        words = [word for word in words if not word in pun] 
+        words = [word for word in words if word.isalpha()] 
+        words = [w for w in words if not w in stops] 
+        words = [w for w in words if not len(w) == 1]
+        for word in words: #loop through the list of words
+            word = lemmatizer.lemmatize(word) #return the lemma of each word
+            if word in tftr_Rep:
+                score+=tftr_Rep[word]
+                i+=1
+        return score/i
             
-def DemScoreToTwt(tweet):
-    score=0
-    i=0
-    Twt=''
-    words = word_tokenize(tweet) 
-    words = [w.lower() for w in words] 
-    words = [word for word in words if not word in pun] 
-    words = [word for word in words if word.isalpha()] 
-    words = [w for w in words if not w in stops] 
-    words = [w for w in words if not len(w) == 1]
-    for word in words: #loop through the list of words
-        word = lemmatizer.lemmatize(word) #return the lemma of each word
-        if word in tftr_Dem:
-            score+=tftr_Dem[word]
-            i+=1
-    return score/i
+    def DemScoreToTwt(tweet):
+        score=0
+        i=0
+        Twt=''
+        words = word_tokenize(tweet) 
+        words = [w.lower() for w in words] 
+        words = [word for word in words if not word in pun] 
+        words = [word for word in words if word.isalpha()] 
+        words = [w for w in words if not w in stops] 
+        words = [w for w in words if not len(w) == 1]
+        for word in words: #loop through the list of words
+            word = lemmatizer.lemmatize(word) #return the lemma of each word
+            if word in tftr_Dem:
+                score+=tftr_Dem[word]
+                i+=1
+        return score/i
+    
 
 
 
-
-def getState(stt):
-    StateList=['Minnesota',
-     'Montana',
-     'North Dakota',
-     'Idaho',
-     'Washington',
-     'Arizona',
-     'California',
-     'Colorado',
-     'Nevada',
-     'New Mexico',
-     'Oregon',
-     'Utah',
-     'Wyoming',
-     'Arkansas',
-     'Iowa',
-     'Kansas',
-     'Missouri',
-     'Nebraska',
-     'Oklahoma',
-     'South Dakota',
-     'Louisiana',
-     'Texas',
-     'Connecticut',
-     'Massachusetts',
-     'New Hampshire',
-     'Rhode Island',
-     'Vermont',
-     'Alabama',
-     'Florida',
-     'Georgia',
-     'Mississippi',
-     'South Carolina',
-     'Illinois',
-     'Indiana',
-     'Kentucky',
-     'North Carolina',
-     'Ohio',
-     'Tennessee',
-     'Virginia',
-     'Wisconsin',
-     'West Virginia',
-     'Delaware',
-     'District of Columbia',
-     'Maryland',
-     'New Jersey',
-     'New York',
-     'Pennsylvania',
-     'Maine',
-     'Michigan']
-    StateList.append('Alaska')
-    StateList.append('Hawaii')
-    for x in StateList:
-        if x in stt:
-            return x
-        
-
-def StateSentiment(df):
+    def getState(stt):
+        StateList=['Minnesota',
+         'Montana',
+         'North Dakota',
+         'Idaho',
+         'Washington',
+         'Arizona',
+         'California',
+         'Colorado',
+         'Nevada',
+         'New Mexico',
+         'Oregon',
+         'Utah',
+         'Wyoming',
+         'Arkansas',
+         'Iowa',
+         'Kansas',
+         'Missouri',
+         'Nebraska',
+         'Oklahoma',
+         'South Dakota',
+         'Louisiana',
+         'Texas',
+         'Connecticut',
+         'Massachusetts',
+         'New Hampshire',
+         'Rhode Island',
+         'Vermont',
+         'Alabama',
+         'Florida',
+         'Georgia',
+         'Mississippi',
+         'South Carolina',
+         'Illinois',
+         'Indiana',
+         'Kentucky',
+         'North Carolina',
+         'Ohio',
+         'Tennessee',
+         'Virginia',
+         'Wisconsin',
+         'West Virginia',
+         'Delaware',
+         'District of Columbia',
+         'Maryland',
+         'New Jersey',
+         'New York',
+         'Pennsylvania',
+         'Maine',
+         'Michigan']
+        StateList.append('Alaska')
+        StateList.append('Hawaii')
+        for x in StateList:
+            if x in stt:
+                return x
+            
     df['Republican Sentiment']=df.apply(lambda row:RepScoreToTwt(row['Tweets']),axis=1)
     df['Democrat Sentiment']=df.apply(lambda row:DemScoreToTwt(row['Tweets']),axis=1)
     dfRep=df[df['Party']=='Republican']
@@ -257,9 +255,7 @@ def StateSentiment(df):
     dfDem['code']=dfDem['State'].apply(lambda state: us_state_abbrev[state])
 
 
-    return dfRep,dfDem
 
-def DrawRepMap(dfRep):
     import chart_studio.plotly as py
     from plotly.offline import iplot
     
@@ -308,9 +304,6 @@ def DrawRepMap(dfRep):
     
     url = iplot( fig, filename='d3-cloropleth-map' )
     
-    
-def drawDemMap(dfDem):
-
 
     scl2 = [[0,'rgb(99,151,255)'], [1,'rgb(0,0,255)']]
     
@@ -358,43 +351,57 @@ def drawDemMap(dfDem):
     
     url = iplot( fig2, filename='d4-cloropleth-map' )
 
-def SentimentTokens(tokFreq):  #Associate a sentiment score to the the output of FreqDist ie a list of tokens and their counts
-        
-    LabMT  = pd.read_excel("ClasseurTest.xlsx") #the xls is just the .txt with every column removed but word and happiness_average
-    LabMT=LabMT.set_index('word') 
-    Scores= LabMT['happiness_average'] 
-        
-    Sentiment=0
-    count=0
-    for tok,freq in tokFreq.items():
-        if tok in Scores.keys():                    #only scoring words that are in the LabMT list
-            Sentiment+=Scores[tok]*freq
-            count+=freq
+
+
+
+
+
+    def GetRepSent(datafr):
+        def SentimentTokens(tokFreq):  #Associate a sentiment score to the the output of FreqDist ie a list of tokens and their counts
             
-    if count !=0:                             #to avoid error when used on empty text or text without any graded words.
-        return Sentiment/count
-    else:
-        return 5.5 #average of 1 to 10
-
-
-
-
-
-def GetRepSent(datafr):
-    See=[]
-    for index,row in datafr.iterrows():
-        tweet=row['Tweets']
-        tokens=[]
-        words = word_tokenize(tweet) 
-        words = [w.lower() for w in words] 
-        words = [word for word in words if not word in pun] 
-        words = [word for word in words if word.isalpha()] 
-        words = [w for w in words if not w in stops] 
-        words = [w for w in words if not len(w) == 1]
-        for word in words: #loop through the list of words
-            word = lemmatizer.lemmatize(word) #return the lemma of each word
-            tokens.append(word)
-        See.append(SentimentTokens(nltk.FreqDist(tokens)) )
-    return See
-
-
+            LabMT  = pd.read_excel("ClasseurTest.xlsx") #the xls is just the .txt with every column removed but word and happiness_average
+            LabMT=LabMT.set_index('word') 
+            Scores= LabMT['happiness_average'] 
+                
+            Sentiment=0
+            count=0
+            for tok,freq in tokFreq.items():
+                if tok in Scores.keys():                    #only scoring words that are in the LabMT list
+                    Sentiment+=Scores[tok]*freq
+                    count+=freq
+                    
+            if count !=0:                             #to avoid error when used on empty text or text without any graded words.
+                return Sentiment/count
+            else:
+                return 5.5 #average of 1 to 10
+    
+        See=[]
+        for index,row in datafr.iterrows():
+            tweet=row['Tweets']
+            tokens=[]
+            words = word_tokenize(tweet) 
+            words = [w.lower() for w in words] 
+            words = [word for word in words if not word in pun] 
+            words = [word for word in words if word.isalpha()] 
+            words = [w for w in words if not w in stops] 
+            words = [w for w in words if not len(w) == 1]
+            for word in words: #loop through the list of words
+                word = lemmatizer.lemmatize(word) #return the lemma of each word
+                tokens.append(word)
+            See.append(SentimentTokens(nltk.FreqDist(tokens)) )
+        return See
+    
+    df['Sentiment']=GetRepSent(df)
+    
+    
+    dfDLed=pd.read_csv('./HS116_membersFixed.csv',sep=';')
+    dfDLed=dfDLed.loc[:,['nokken_poole_dim1','nokken_poole_dim2','bioname']]
+    dfDLed['Name']=dfDLed['bioname'].apply(lambda x: x.lower().replace(',',''))
+    dfDLed=dfDLed.drop('bioname',axis=1)
+    df['Name']=df['Name'].apply(lambda x: x.lower().replace(',',''))
+    
+    dfMerged=df.merge(dfDLed,how='left', left_on='Name', right_on='Name')
+    return df,dfMerged.corr()
+    
+    
+    
