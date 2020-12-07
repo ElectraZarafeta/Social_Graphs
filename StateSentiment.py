@@ -1,9 +1,11 @@
 import pandas as pd
 import regex as re
+import networkx as nx
 import csv
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from fa2 import ForceAtlas2
 import jsonlines
 import nltk
 from nltk.stem import WordNetLemmatizer 
@@ -83,8 +85,7 @@ def Initialization(data):
         if word in WordCountDict:
             tr= WordCountDict[word]/(WordCountDict2[word]+25)
             tftr_Rep[word]=tr
-
-    return df,RepTokens,DemTokens    
+    
 
 def RepScoreToTwt(tweet):
     score=0
@@ -121,59 +122,60 @@ def DemScoreToTwt(tweet):
     return score/i
 
 
-StateList=['Minnesota',
- 'Montana',
- 'North Dakota',
- 'Idaho',
- 'Washington',
- 'Arizona',
- 'California',
- 'Colorado',
- 'Nevada',
- 'New Mexico',
- 'Oregon',
- 'Utah',
- 'Wyoming',
- 'Arkansas',
- 'Iowa',
- 'Kansas',
- 'Missouri',
- 'Nebraska',
- 'Oklahoma',
- 'South Dakota',
- 'Louisiana',
- 'Texas',
- 'Connecticut',
- 'Massachusetts',
- 'New Hampshire',
- 'Rhode Island',
- 'Vermont',
- 'Alabama',
- 'Florida',
- 'Georgia',
- 'Mississippi',
- 'South Carolina',
- 'Illinois',
- 'Indiana',
- 'Kentucky',
- 'North Carolina',
- 'Ohio',
- 'Tennessee',
- 'Virginia',
- 'Wisconsin',
- 'West Virginia',
- 'Delaware',
- 'District of Columbia',
- 'Maryland',
- 'New Jersey',
- 'New York',
- 'Pennsylvania',
- 'Maine',
- 'Michigan']
-StateList.append('Alaska')
-StateList.append('Hawaii')
+
 
 def getState(stt):
+    StateList=['Minnesota',
+     'Montana',
+     'North Dakota',
+     'Idaho',
+     'Washington',
+     'Arizona',
+     'California',
+     'Colorado',
+     'Nevada',
+     'New Mexico',
+     'Oregon',
+     'Utah',
+     'Wyoming',
+     'Arkansas',
+     'Iowa',
+     'Kansas',
+     'Missouri',
+     'Nebraska',
+     'Oklahoma',
+     'South Dakota',
+     'Louisiana',
+     'Texas',
+     'Connecticut',
+     'Massachusetts',
+     'New Hampshire',
+     'Rhode Island',
+     'Vermont',
+     'Alabama',
+     'Florida',
+     'Georgia',
+     'Mississippi',
+     'South Carolina',
+     'Illinois',
+     'Indiana',
+     'Kentucky',
+     'North Carolina',
+     'Ohio',
+     'Tennessee',
+     'Virginia',
+     'Wisconsin',
+     'West Virginia',
+     'Delaware',
+     'District of Columbia',
+     'Maryland',
+     'New Jersey',
+     'New York',
+     'Pennsylvania',
+     'Maine',
+     'Michigan']
+    StateList.append('Alaska')
+    StateList.append('Hawaii')
     for x in StateList:
         if x in stt:
             return x
@@ -355,12 +357,13 @@ def drawDemMap(dfDem):
     fig2 = dict( data=data, layout=layout )
     
     url = iplot( fig2, filename='d4-cloropleth-map' )
-        
-LabMT  = pd.read_excel("ClasseurTest.xlsx") #the xls is just the .txt with every column removed but word and happiness_average
-LabMT=LabMT.set_index('word') 
-Scores= LabMT['happiness_average'] 
 
 def SentimentTokens(tokFreq):  #Associate a sentiment score to the the output of FreqDist ie a list of tokens and their counts
+        
+    LabMT  = pd.read_excel("ClasseurTest.xlsx") #the xls is just the .txt with every column removed but word and happiness_average
+    LabMT=LabMT.set_index('word') 
+    Scores= LabMT['happiness_average'] 
+        
     Sentiment=0
     count=0
     for tok,freq in tokFreq.items():
@@ -393,6 +396,5 @@ def GetRepSent(datafr):
             tokens.append(word)
         See.append(SentimentTokens(nltk.FreqDist(tokens)) )
     return See
-
 
 
