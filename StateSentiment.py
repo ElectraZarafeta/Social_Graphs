@@ -1,11 +1,9 @@
 import pandas as pd
 import regex as re
-import networkx as nx
 import csv
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-from fa2 import ForceAtlas2
 import jsonlines
 import nltk
 from nltk.stem import WordNetLemmatizer 
